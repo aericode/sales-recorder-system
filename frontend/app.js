@@ -5,8 +5,14 @@ function handleButtonClick() {
 }
 
 function getInputArray(inputString){
-    const inputArray = inputString.split('\n')
+    const splittedInputs = inputString.split('\n')
+    const inputArray = filterEmptyEntries(splittedInputs)
     return inputArray
+}
+
+function filterEmptyEntries(splittedInputs){
+    const nonEmptyInputsArray = splittedInputs.filter(entry => entry.length !== 0)
+    return nonEmptyInputsArray
 }
 
 function getParsedInputArray(inputArray){
