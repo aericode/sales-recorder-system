@@ -1,5 +1,5 @@
 import * as rawbody from 'raw-body';
-import { Body, HttpException, HttpStatus, Req } from '@nestjs/common';
+import { HttpException, HttpStatus, Req } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
