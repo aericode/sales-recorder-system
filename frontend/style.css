@@ -1,6 +1,6 @@
-.userInput {
+#userInput {
     width: 800px;
-    height: 500px;
+    height: 400px;
     font-size: 16px;
     resize: vertical;
 }
