@@ -33,7 +33,7 @@ function getParsedInputArray(inputArray){
 function submitDataToBackend(parsedInputArray){
     const requestBody = JSON.stringify({ data: parsedInputArray });
 
-    fetch('localhost:3100', {
+    fetch('http://localhost:3000', {
         mode: 'no-cors',
         method: 'POST',
         headers: {
