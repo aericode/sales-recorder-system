@@ -1,7 +1,8 @@
 function handleButtonClick() {
     const inputString = document.getElementById('userInput').value
     const inputArray = getInputArray(inputString)
-    console.log(getParsedInputArray(inputArray))
+    const parsedInputArray = getParsedInputArray(inputArray)
+    submitDataToBackend(parsedInputArray)
 }
 
 function getInputArray(inputString){
@@ -27,4 +28,29 @@ function getParsedInputArray(inputArray){
         return entry
     });
     return parsedInputArray
+}
+
+function submitDataToBackend(parsedInputArray){
+    const requestBody = JSON.stringify({ data: parsedInputArray });
+
+    fetch('localhost:3100', {
+        mode: 'no-cors',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: requestBody,
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('network error response:');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('backend response:', data);
+    })
+    .catch(error => {
+        console.error('backend error response:', error);
+    });
 }
