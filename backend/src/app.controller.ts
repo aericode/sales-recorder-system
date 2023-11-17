@@ -12,7 +12,7 @@ export class AppController {
 
   @Post()
   postFile(@Body() data, @Req() req){
-    return this.appService.postFile(data, req);
+    return this.appService.handleFilePost(data, req);
   }
 
 }

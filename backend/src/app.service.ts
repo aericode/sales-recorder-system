@@ -1,5 +1,5 @@
 import * as rawbody from 'raw-body';
-import { Body, Req } from '@nestjs/common';
+import { Body, HttpException, HttpStatus, Req } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -8,16 +8,23 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async postFile(@Body() data, @Req() req){
-    if (req.readable) {
-      const raw = await rawbody(req);
-      const text = raw.toString().trim();
-      const json = JSON.parse(text)
-      console.log(json);
+  async handleFilePost(@Body() data, @Req() req){
+    const jsonInput:JSON[] = await this.receiveData(data, req)
+    console.log(jsonInput)
+  }
 
-      return "success"
+  async receiveData(@Body() data, @Req() req){
+    if (req.readable) {
+      const rawInput = await rawbody(req);
+      const textInput = rawInput.toString().trim();
+      const jsonInput = JSON.parse(textInput)
+      return jsonInput as JSON[]
     }else{
-      return "error"
+      throw new HttpException('Invalid request', HttpStatus.BAD_REQUEST);
     }
+  }
+
+  validateData (jsonInput :JSON[]){
+    //jsonInput
   }
 }
