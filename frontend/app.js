@@ -1,4 +1,10 @@
 function handleButtonClick() {
-    const userInput = document.getElementById('userInput').value;
-    console.log('User input:', userInput);
+    const inputString = document.getElementById('userInput').value
+    const inputArray = getArrayFromInput(inputString)
+    console.log(inputArray)
+}
+
+function getArrayFromInput(userInput){
+    const inputArray = userInput.split('\n')
+    return inputArray
 }
