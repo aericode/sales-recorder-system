@@ -11,8 +11,8 @@ export class AppController {
   }
 
   @Post()
-  postFile(@Body() data, @Req() req){
-    return this.appService.handleFilePost(data, req);
+  postFile(@Req() req){
+    return this.appService.handleFilePost(req);
   }
 
 }

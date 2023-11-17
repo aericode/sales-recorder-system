@@ -8,12 +8,12 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async handleFilePost(@Body() data, @Req() req){
-    const jsonInput:JSON[] = await this.receiveData(data, req)
+  async handleFilePost(@Req() req){
+    const jsonInput:JSON[] = await this.receiveData(req)
     console.log(jsonInput)
   }
 
-  async receiveData(@Body() data, @Req() req){
+  async receiveData(@Req() req){
     if (req.readable) {
       const rawInput = await rawbody(req);
       const textInput = rawInput.toString().trim();
