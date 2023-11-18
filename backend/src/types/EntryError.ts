@@ -1,1 +1,1 @@
-export type EntryError = { [key: string]: string[] }
+export type EntryError = { [key: number]: string[] }
