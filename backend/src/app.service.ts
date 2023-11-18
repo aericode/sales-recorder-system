@@ -16,11 +16,12 @@ export class AppService {
     if(errorArray.length === 0){
       console.log('no errors')
     }else{
-      console.log('errors: ', errorArray)
+      console.log(this.generateEntryErrorMessage(errorArray))
     }
   }
 
   async receiveData(@Req() req){
+
     if (req.readable) {
       const rawInput = await rawbody(req)
       const textInput = rawInput.toString().trim()
@@ -105,5 +106,33 @@ export class AppService {
     return errorArray
   }
 
+  generateEntryErrorMessage(errorArray : EntryError[]){
+    const introduction = `Opa! Encontramos um erro no arquivo enviado`
+    const lineMessageArray = <string[]>[];
+    errorArray.forEach(errorEntry =>{
+      //extracts the key from the key/value entry
+      const parsedKey:number = parseInt(Object.keys(errorArray)[0]);
+
+      //extracts the value from the key/value entry
+      const entryErrorArray:string[] = errorEntry[parsedKey]
+      //const isMessageOnPlural = entryErrorArray.length === 1
+
+      console.log(parsedKey, entryErrorArray)
+      /*
+      const stringfiedErrorList: string = entryErrorArray.join(', ');
+
+      //The key is indexed to zero, whereas the line is indexed to 1
+      //adding 1 corrects the indexing for the user
+      const lineMessage =
+      `Na linha ${parsedKey + 1}
+      ${true ? `foram encontrados erros nos campo: ` :`foi encontrado um erro no campo: `}
+      ${stringfiedErrorList}
+      `
+      lineMessageArray.push(lineMessage)
+      */
+    })
+    const lineMessageString = lineMessageArray.join('\n')
+    const errorMessage = `${introduction}\n${lineMessageString}`
+  }
   
 }
