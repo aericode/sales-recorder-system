@@ -2,6 +2,7 @@ import * as rawbody from 'raw-body';
 import { HttpException, HttpStatus, Req } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { TransactionEntryDto } from './dtos/TransactionEntry.dto';
+import { EntryError } from './types/EntryError';
 
 @Injectable()
 export class AppService {
@@ -11,9 +12,6 @@ export class AppService {
 
   async handleFilePost(@Req() req){
     const transactionEntries: TransactionEntryDto[] = await this.receiveData(req)
-    //console.log(transactionEntries)
-    //console.log('teste', Array.isArray(transactionEntries))
-
     console.log(this.validateEntries(transactionEntries))
   }
 
@@ -30,25 +28,24 @@ export class AppService {
   }
 
   validateEntries (transactionEntries: TransactionEntryDto[]){
-    const irregularEntryIndexList = <Number[]>[]
+    const errorArray = <EntryError[]>[]
     let currentTransactionIndex = 0
     transactionEntries.forEach((entry) => {
-      if(!validateFieldSizes(entry)) irregularEntryIndexList.push(currentTransactionIndex)
-      currentTransactionIndex++;
-    });
-
-
-    function validateFieldSizes(entry : TransactionEntryDto){
-      let isValid = true
-      if(entry.type.length !=  1) isValid = false;
-      if(entry.date.length != 25) isValid = false;
-      if(entry.product.length != 30) isValid = false;
-      if(entry.value.length != 10) isValid = false;
-      if(entry.vendor.length > 20) isValid = false;
+      const entryErrorArray = <string[]>[]
       
-      console.log(entry, entry.type.length, entry.date.length, entry.product.length, entry.value.length, entry.vendor.length)
-      return isValid;
-    }
+      if(!verifyType(entry.type))entryErrorArray.push("type")
+      if(!verifyDate(entry.date))entryErrorArray.push("date")
+      if(!verifyProduct(entry.product))entryErrorArray.push("product")
+      if(!verifyValue(entry.value))entryErrorArray.push("value")
+      if(!verifyVendor(entry.vendor))entryErrorArray.push("vendor")
+
+      if(entryErrorArray.length !== 0){
+        const newEntry: EntryError = { [currentTransactionIndex]: entryErrorArray };
+        errorArray.push(newEntry);
+      }
+
+      currentTransactionIndex++;
+    })
 
     function verifyType(entryType : string){
       let isValid = true
@@ -58,7 +55,7 @@ export class AppService {
       if(isNaN(parsed)){
         isValid = false
       }else{
-        if(parsed < 1 || parsed > 4) isValid = false;
+        if(parsed == 0 || parsed > 4) isValid = false;
       }
 
       return isValid
@@ -99,8 +96,19 @@ export class AppService {
       return isValid
     }
 
+    function includeError(key: number, newErrorString: string){
+      const existingEntry = errorArray.find(entry => key in entry);
+      if (existingEntry) {
+          existingEntry[key] = [...existingEntry[key], newErrorString];
+      } else {
+          const newEntry: EntryError = {};
+          newEntry[key] = [newErrorString];
+          errorArray.push(newEntry);
+      }
+    }
 
-    return irregularEntryIndexList
+
+    return errorArray
   }
 
   
