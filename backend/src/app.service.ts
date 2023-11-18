@@ -12,7 +12,12 @@ export class AppService {
 
   async handleFilePost(@Req() req){
     const transactionEntries: TransactionEntryDto[] = await this.receiveData(req)
-    console.log(this.validateEntries(transactionEntries))
+    const errorArray:EntryError[] = this.validateEntries(transactionEntries)
+    if(errorArray.length === 0){
+      console.log('no errors')
+    }else{
+      console.log('errors: ', errorArray)
+    }
   }
 
   async receiveData(@Req() req){
@@ -94,17 +99,6 @@ export class AppService {
       if(entryVendor.length ==  0 || entryVendor.length > 20 ) isValid = false;
 
       return isValid
-    }
-
-    function includeError(key: number, newErrorString: string){
-      const existingEntry = errorArray.find(entry => key in entry);
-      if (existingEntry) {
-          existingEntry[key] = [...existingEntry[key], newErrorString];
-      } else {
-          const newEntry: EntryError = {};
-          newEntry[key] = [newErrorString];
-          errorArray.push(newEntry);
-      }
     }
 
 
