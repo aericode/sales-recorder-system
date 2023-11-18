@@ -39,14 +39,14 @@ export class AppService {
     transactionEntries.forEach((entry) => {
       const entryErrorArray = <string[]>[]
       
-      if(!verifyType(entry.type))entryErrorArray.push("type")
-      if(!verifyDate(entry.date))entryErrorArray.push("date")
-      if(!verifyProduct(entry.product))entryErrorArray.push("product")
-      if(!verifyValue(entry.value))entryErrorArray.push("value")
-      if(!verifyVendor(entry.vendor))entryErrorArray.push("vendor")
+      if(!verifyType(entry.type))entryErrorArray.push("tipo")
+      if(!verifyDate(entry.date))entryErrorArray.push("data")
+      if(!verifyProduct(entry.product))entryErrorArray.push("produto")
+      if(!verifyValue(entry.value))entryErrorArray.push("valor")
+      if(!verifyVendor(entry.vendor))entryErrorArray.push("vendedor")
 
       if(entryErrorArray.length !== 0){
-        const newEntry: EntryError = { [currentTransactionIndex]: entryErrorArray };
+        const newEntry: EntryError = { index: currentTransactionIndex, errors: entryErrorArray };
         errorArray.push(newEntry);
       }
 
@@ -110,29 +110,23 @@ export class AppService {
     const introduction = `Opa! Encontramos um erro no arquivo enviado`
     const lineMessageArray = <string[]>[];
     errorArray.forEach(errorEntry =>{
-      //extracts the key from the key/value entry
-      const parsedKey:number = parseInt(Object.keys(errorArray)[0]);
+      const errorIndex:number = errorEntry.index
 
-      //extracts the value from the key/value entry
-      const entryErrorArray:string[] = errorEntry[parsedKey]
-      //const isMessageOnPlural = entryErrorArray.length === 1
+      const entryErrorArray:string[] = errorEntry.errors
+      const isMessageOnPlural = entryErrorArray.length === 1
 
-      console.log(parsedKey, entryErrorArray)
-      /*
       const stringfiedErrorList: string = entryErrorArray.join(', ');
 
       //The key is indexed to zero, whereas the line is indexed to 1
       //adding 1 corrects the indexing for the user
       const lineMessage =
-      `Na linha ${parsedKey + 1}
-      ${true ? `foram encontrados erros nos campo: ` :`foi encontrado um erro no campo: `}
-      ${stringfiedErrorList}
-      `
+      `Na linha ${errorIndex + 1} ${isMessageOnPlural ? `foram encontrados erros nos campo:` : `foi encontrado um erro no campo:`} ${stringfiedErrorList}.`
       lineMessageArray.push(lineMessage)
-      */
     })
     const lineMessageString = lineMessageArray.join('\n')
     const errorMessage = `${introduction}\n${lineMessageString}`
+
+    return errorMessage
   }
   
 }
