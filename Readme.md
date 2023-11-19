@@ -1,5 +1,12 @@
 ##Sales Record System relatório
 
+para executar:
+-executar index.html do front-end
+-instalar node
+-executar npm install na pasta backend
+-executar npm run dev na pasta backend
+
+
 Objetivos alcançados
 1. Envio de arquivos
 2. Parsing dos arquivos
